@@ -2,12 +2,13 @@ public class PhoneBook {
 
     public static void main(String[] args) {
         //Добавить считывание ввода пользователя в цикле
-        System.out.println(checkName("Иван Иванович Иванов"));
-        System.out.println(formatName("   иванов Иван иванович    "));
-    }
-
-    public static boolean checkPhoneNumber(String phoneNumber) {
-        return true;
+        String FIO = "Иван Иванович иванов";
+        String phone = "8(926)280-03-03";
+        System.out.println("checkName(FIO): " + checkName(FIO));
+        System.out.println("formatName(FIO): " + formatName(FIO));
+        System.out.println("checkPhoneNumber(phone): " + checkPhoneNumber(phone));
+        phone = formatPhoneNumber(phone);
+        System.out.println(phone);
     }
 
     public static boolean checkName(String name) {
@@ -31,8 +32,16 @@ public class PhoneBook {
         return result;
     }
 
+    public static boolean checkPhoneNumber(String phoneNumber) {
+        String clean = phoneNumber.replaceAll("[^0-9]", "");
+        return clean.length() == 11;
+    }
+
     public static String formatPhoneNumber(String number) {
-        return "";
+        number = number.replaceAll("[^0-9]", "");
+        number = "+7" + " " + number.substring(1, 4) + " " +
+                number.substring(4, 7) + " " + number.substring(7, 9) + " " + number.substring(9);
+        return number;
     }
 
     public static void add(String[][] book, String name, String number) {
