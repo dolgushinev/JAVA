@@ -1,37 +1,93 @@
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class PhoneBook {
 
-    private static String[][] book = new String[3][3];
+    private static String[][] book = new String[10][2];
     private static int nextIndex = 0;
+    private static Scanner scanner = new Scanner(System.in);
+    private static boolean exitFlag = false;
+
 
     public static void main(String[] args) {
-        //Добавить считывание ввода пользователя в цикле
-/*        String FIO = "Иван Иванович иванов";
-        String phone = "8(926)280-03-03";
-        System.out.println("checkName(FIO): " + checkName(FIO));
-        System.out.println("formatName(FIO): " + formatName(FIO));
-        System.out.println("checkPhoneNumber(phone): " + checkPhoneNumber(phone));
-        System.out.println("formatPhoneNumber(phone): " + formatPhoneNumber(phone));*/
 
-        System.out.println("Первый вызов add");
-        add(book, formatName("Иванов иван Иванович"), formatPhoneNumber("8(926)280-03-03"));
-        System.out.println("Второй вызов add");
-        add(book, formatName("Петров Иван иванович"), formatPhoneNumber("8(926)111-11-11"));
-        System.out.println("Третий вызов add");
-        add(book, formatName("сидоров Иван Иванович"), formatPhoneNumber("8(926)280-03-03"));
+        String name = "";
+        String phoneNumber = "";
+        int indexOfCopy = -1;
+        String[][] tempBook;
 
-        System.out.println("Итого: ");
+        String[] array = new String[] {"Иванов", "Аватор", "Базилик"};
+        System.out.println(Arrays.toString(array));
+
+        Arrays.sort(array);
+        System.out.println(Arrays.toString(array));
+
+        System.out.println("Добро пожаловать в телефонный справочник.");
+        System.out.println("Для выхода введите \"!\"\n");
+
+        do {
+
+            if (nextIndex == book.length) {
+                tempBook = new String[book.length * 2][2];
+
+                for (int j = 0; j < nextIndex; j++) {
+                    tempBook[j] = book[j];
+                }
+                book = tempBook;
+            }
+
+            do {
+                System.out.println("Введите ФИО в формате: Фамилия Имя Отчество");
+                name = scanner.nextLine();
+            }
+            while (!checkName(name));
+
+            if (exitFlag) break;
+
+            name = formatName(name);
+
+            indexOfCopy = findName(name);
+
+            if (indexOfCopy == -1) {
+                do {
+                    System.out.println("Введите номер телефона, например: 8(926)234-51-18");
+                    phoneNumber = scanner.nextLine();
+                }
+                while (!checkPhoneNumber(phoneNumber));
+
+                if (exitFlag) break;
+
+                phoneNumber = formatPhoneNumber(phoneNumber);
+
+                add(book, name, phoneNumber);
+            } else
+                System.out.println("ФИО присутствует в справочнике, телефон: " + book[indexOfCopy][1]);
+
+        } while(!exitFlag);
+
+        if(nextIndex >= 1) list(book);
+    }
+
+    private static int findName(String name) {
+        int indexOfCopy = -1;
         for (int i = 0; i < nextIndex; i++) {
-            System.out.println(book[i][0] + " " + book[i][1]);
+            if (book[i][0].equals(name)) {
+                indexOfCopy = i;
+                break;
+            }
         }
-        System.out.println("");
+        return indexOfCopy;
     }
 
     public static boolean checkName(String name) {
-        String[] words = name.trim().split(" ");
-        System.out.println(words.length);
-        return words.length == 3;
+        if (name.equals("!")) {
+            exitFlag = true;
+            return true;
+        } else {
+            String[] words = name.trim().split(" ");
+            if (words.length != 3) System.out.println("Неверный формат, повторите ввод.");
+            return words.length == 3;
+        }
     }
 
     public static String formatName(String name) {
@@ -50,8 +106,14 @@ public class PhoneBook {
     }
 
     public static boolean checkPhoneNumber(String phoneNumber) {
-        String clean = phoneNumber.replaceAll("[^0-9]", "");
-        return clean.length() == 11;
+        if (phoneNumber.equals("!")) {
+            exitFlag = true;
+            return true;
+        } else {
+            String clean = phoneNumber.replaceAll("[^0-9]", "");
+            if (clean.length() != 11) System.out.println("Неверный формат, повторите ввод.");
+            return clean.length() == 11;
+        }
     }
 
     public static String formatPhoneNumber(String number) {
@@ -61,36 +123,20 @@ public class PhoneBook {
         return result;
     }
 
-/*    public static void add(String[][] book, String name, String number) {
-        boolean nameIsExist = false;
-        int indexOfCopy = -1;
-        for (int i = 0; i < nextIndex; i++) {
-            if (book[i][0].equals(name)) {
-                System.out.println(book[i][0] + " " + book[i][1]);
-                indexOfCopy = i;
-                nameIsExist = true;
-                break;
-            }
-        }
-        if (!nameIsExist) {
-            book[nextIndex][0] = name;
-            book[nextIndex][1] = number;
-            nextIndex++;
-        } else System.out.println("ФИО присутствует в справочнике, телефон: " + book[indexOfCopy][1]);
-
-        System.out.println("Итого: ");
-        for (int i = 0; i < nextIndex; i++) {
-            System.out.println(book[i][0] + " " + book[i][1]);
-        }
-        System.out.println("");*/
-
     public static void add(String[][] book, String name, String number) {
-            book[nextIndex][0] = name;
-            book[nextIndex][1] = number;
-            nextIndex++;
+        book[nextIndex][0] = name;
+        book[nextIndex][1] = number;
+        nextIndex++;
     }
 
     public static void list(String[][] book) {
         //print phone book
+
+        System.out.println("Содержимое телефонного справочника: ");
+
+        for (int i = 0; i < nextIndex; i++) {
+            System.out.println(book[i][0] + ": " + book[i][1]);
+        }
+        System.out.println("");
     }
 }
