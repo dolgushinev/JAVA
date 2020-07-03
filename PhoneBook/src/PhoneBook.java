@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class PhoneBook {
@@ -15,12 +16,6 @@ public class PhoneBook {
         String phoneNumber = "";
         int indexOfCopy = -1;
         String[][] tempBook;
-
-        String[] array = new String[] {"Иванов", "Аватор", "Базилик"};
-        System.out.println(Arrays.toString(array));
-
-        Arrays.sort(array);
-        System.out.println(Arrays.toString(array));
 
         System.out.println("Добро пожаловать в телефонный справочник.");
         System.out.println("Для выхода введите \"!\"\n");
@@ -45,7 +40,6 @@ public class PhoneBook {
             if (exitFlag) break;
 
             name = formatName(name);
-
             indexOfCopy = findName(name);
 
             if (indexOfCopy == -1) {
@@ -58,12 +52,11 @@ public class PhoneBook {
                 if (exitFlag) break;
 
                 phoneNumber = formatPhoneNumber(phoneNumber);
-
                 add(book, name, phoneNumber);
             } else
                 System.out.println("ФИО присутствует в справочнике, телефон: " + book[indexOfCopy][1]);
 
-        } while(!exitFlag);
+        } while (!exitFlag);
 
         if(nextIndex >= 1) list(book);
     }
@@ -130,13 +123,19 @@ public class PhoneBook {
     }
 
     public static void list(String[][] book) {
-        //print phone book
 
-        System.out.println("Содержимое телефонного справочника: ");
+        String[] sortBook = new String[nextIndex];
 
         for (int i = 0; i < nextIndex; i++) {
-            System.out.println(book[i][0] + ": " + book[i][1]);
+            sortBook[i] = book[i][0] + " : " + book[i][1];
+        }
+
+        Arrays.sort(sortBook);
+
+        for (int i = 0; i < nextIndex; i++) {
+            System.out.println(sortBook[i]);
         }
         System.out.println("");
+
     }
 }
