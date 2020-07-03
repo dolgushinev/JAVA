@@ -123,7 +123,7 @@ public class PhoneBook {
     }
 
     public static void list(String[][] book) {
-
+        System.out.println("Полный список абоненов телефонного справочника:");
         String[] sortBook = new String[nextIndex];
 
         for (int i = 0; i < nextIndex; i++) {
